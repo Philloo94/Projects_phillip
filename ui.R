@@ -13,3 +13,6 @@ ui <- dashboardPage(
     mod_table_ui("table1")
   )
 )
+
+
+# have fun
