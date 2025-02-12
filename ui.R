@@ -1,17 +1,18 @@
 
-ui <- dashboardPage(
-  dashboardHeader(title = "Production-Ready Shiny App"),
-  dashboardSidebar(
-    sidebarMenu(
-      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Charts", tabName = "charts", icon = icon("chart-line")),
-      menuItem("Tables", tabName = "tables", icon = icon("table"))
-    )
-  ),
-  dashboardBody(
-    mod_chart_ui("chart1"),
-    mod_table_ui("table1")
-  )
-)
+# Load modules
+source("modules/file_upload_module.R")
+source("modules/data_display_module.R")
+source("functions/read_data.R") 
 
+ui <- fluidPage(
+  
+  # Title of the application
+  titlePanel("Carbon Majors Emissions Data"),
+  
+  # File upload module UI
+  fileUploadUI("file1"),
+  
+  # Display module UI
+  dataDisplayUI("display1")
+)
 
