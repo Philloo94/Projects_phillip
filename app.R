@@ -13,6 +13,6 @@ source("ui.R")
 source("server.R")
 source("modules/mod_chart.R")
 source("modules/mod_table.R")
-
+source("functions/read_data.R")
 
 shinyApp(ui = ui, server = server)

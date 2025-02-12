@@ -3,6 +3,7 @@ library(shiny)
 library(shinydashboard)
 library(DT)
 library(ggplot2)
+library(readr)
 
 # Load data
 data <- iris
