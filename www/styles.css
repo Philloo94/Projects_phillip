@@ -1,2 +1,30 @@
 
-# CSS files
+
+/* style.css */
+.navbar-title {
+  text-align: center;
+  width: 100%;
+  font-size: 40px;
+  font-weight: bold;
+} 
+
+/* Center the loading div */
+.loading-container {
+  text-align: center;
+  font-size: 18px;
+}
+
+/* Style the loading spinner */
+.loading-spinner {
+  height: 50px;
+}
+
+/* Style the loading text */
+.loading-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+}
+
+
+

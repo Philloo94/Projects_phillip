@@ -6,7 +6,8 @@
 #
 #    https://shiny.posit.co/
 #
-library(shiny)
+# library(shiny)
+# library(bs4Dash)
 
 source("global.R")
 source("ui.R")
@@ -16,5 +17,6 @@ source("modules/mod_table.R")
 source("functions/read_data.R") 
 source("modules/file_upload_module.R")
 source("modules/data_display_module.R")
+source("modules/dashboard_module.R")
 
 shinyApp(ui = ui, server = server)

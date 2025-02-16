@@ -4,12 +4,8 @@ library(shinydashboard)
 library(DT)
 library(ggplot2)
 library(readr)
+library(bs4Dash)
+library(dplyr)
+library(httr)
+library(jsonlite)
 
-# Load data
-data <- iris
-
-
-# Define a helper function
-calculate_summary <- function(df){
-  summary(df)
-}
