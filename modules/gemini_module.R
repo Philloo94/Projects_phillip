@@ -24,6 +24,8 @@ geminiServer <- function(id, filtered_data) {
     
     api_key <- Sys.getenv("GEMINI_API_KEY")
     
+    print(api_key)
+    
     if (api_key == "") {
       stop("❌ GEMINI_API_KEY is missing! Set it in your .Renviron file.")
     }
