@@ -8,4 +8,5 @@ library(dplyr)
 library(httr)
 library(jsonlite)
 library(shinyBS)
+library(shinyjs)
 

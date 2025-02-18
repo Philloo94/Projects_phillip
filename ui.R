@@ -73,18 +73,17 @@ ui <- bs4DashPage(
                    )
                  )
       ),
-      # ✅ Correct way to include dashboard module
-      dashboardUI("dashboard"),
-      
-### new code added for geminiui      
-      
-      # 💡 AI Insights (Gemini Module UI)
-      conditionalPanel(
-        condition = "input.ai_icon_clicked == true",  # Show only if AI icon was clicked
-        geminiUI("gemini")  # Call the Gemini UI module here
-      )
 
-    )
+      #######
+      # ✅ Dashboard Tab (Corrected)
+      bs4TabItem(tabName = "dashboard",  # Add tabName
+                 dashboardUI("dashboard")  # Place dashboardUI inside bs4TabItem
+      )
+      
+
+    ),
+    
+    geminiUI("gemini_module")
   )
 )
 
