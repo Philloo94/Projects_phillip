@@ -1,20 +1,47 @@
+library(bs4Dash)
 library(shiny)
 library(httr)
 library(jsonlite)
+
+
+## ui for the gemini module
 
 geminiUI <- function(id) {
   ns <- NS(id)
   
   tagList(
-    selectInput(ns("summary_type"), "Choose Summary Type", 
-                choices = c("Trend Summary", "Comparison Summary", "Industry Impact")),
-    actionButton(ns("analyze"), "Get AI Analysis"),
-    br(), br(),
-    uiOutput(ns("loading_ui")),  # Loading Spinner
-    verbatimTextOutput(ns("analysis")),
-    downloadButton(ns("download_analysis"), "Download Analysis")  # Download Button
+    # AI Icon in Navbar (Only visible on Dashboard)
+    conditionalPanel(
+#      condition = "input.sidebar == 'dashboard'",
+       condition = "input.sidebarItemExpanded == 'dashboard'",
+      tags$div(
+        id = ns("ai_icon"),
+        class = "ai-icon-container",
+        tags$i(class = "fas fa-robot ai-icon", title = "AI Insights"),
+        tags$div(
+          class = "ai-dropdown",
+          selectInput(ns("summary_type"), "Choose Analysis Type", 
+                      choices = c("Trend Summary", "Comparison Summary", "Industry Impact")),
+          actionButton(ns("analyze"), "Get AI Analysis")
+        )
+      )
+    ),
+    
+ # Hidden Modal Popup for AI Analysis
+    bs4Modal(
+      id = ns("ai_modal"),
+      title = "AI Analysis",
+      status = "primary",
+      solidHeader = TRUE,
+      closable = TRUE,
+      width = "medium",
+      uiOutput(ns("loading_ui")),  # Loading Spinner
+      verbatimTextOutput(ns("analysis")),
+      downloadButton(ns("download_analysis"), "Download Analysis")  # Export Button
+    )
   )
 }
+
 
 geminiServer <- function(id, filtered_data) {
   moduleServer(id, function(input, output, session) {
@@ -24,7 +51,9 @@ geminiServer <- function(id, filtered_data) {
     
     api_key <- Sys.getenv("GEMINI_API_KEY")
     
-    print(api_key)
+#    print(api_key)
+    print(paste0("Using API Key: ****", substr(api_key, nchar(api_key)-4, nchar(api_key))))
+    
     
     if (api_key == "") {
       stop("❌ GEMINI_API_KEY is missing! Set it in your .Renviron file.")
@@ -35,7 +64,10 @@ geminiServer <- function(id, filtered_data) {
       max_year <- max(filtered_data$year, na.rm = TRUE)
       unique_companies <- unique(filtered_data$parent_entity)
       num_companies <- length(unique_companies)
-      top_companies <- paste(head(unique_companies, 5), collapse = ", ")  # Show first 5 companies
+ #    top_companies <- paste(head(unique_companies, 5), collapse = ", ")  # Show first 5 companies
+      num_to_display <- min(5, num_companies)
+      top_companies <- paste(head(unique_companies, num_to_display), collapse = ", ")
+      
       
       summary_stats <- paste0(
         "The dataset spans from ", min_year, " to ", max_year,
@@ -79,8 +111,12 @@ geminiServer <- function(id, filtered_data) {
     response_text <- reactiveVal("")
     loading <- reactiveVal(FALSE)
     
-    observeEvent(input$analyze, {
-      req(input$summary_type, filtered_data())
+    # observeEvent(input$analyze, {
+    #   req(input$summary_type, filtered_data())
+    
+    # React to the AI icon being clicked
+    observeEvent(input$ai_icon_clicked, {
+      req(input$summary_type, filtered_data())  # Ensure that both the summary type and filtered data are available
       
       response_text("")  # Clear previous text
       loading(TRUE)  # Show loading spinner
@@ -92,8 +128,17 @@ geminiServer <- function(id, filtered_data) {
       response <- tryCatch({
         httr::POST(
           url,
+          # body = toJSON(list(
+          #   prompt = prompt_text
+          # ), auto_unbox = TRUE),
           body = toJSON(list(
-            prompt = prompt_text
+            contents = list(
+              list(
+                parts = list(
+                  list(text = prompt_text)
+                )
+              )
+            )
           ), auto_unbox = TRUE),
           encode = "json",
           content_type_json()
@@ -122,7 +167,15 @@ geminiServer <- function(id, filtered_data) {
         return()
       }
       
+#      ai_output <- response_json$candidates[[1]]$output
+      if (length(response_json$candidates) == 0 || is.null(response_json$candidates[[1]]$output)) {
+        response_text("⚠️ No valid response received from Gemini API.")
+        return()
+      }
+      
+      
       ai_output <- response_json$candidates[[1]]$output
+      
       
       formatted_response <- gsub("\n", "\n\n", ai_output)  # Add paragraph spacing
       formatted_response <- paste0("📊 **AI Analysis:**\n\n", formatted_response)
@@ -140,15 +193,40 @@ geminiServer <- function(id, filtered_data) {
     #   }
     # })
     
+    # output$loading_ui <- renderUI({
+    #   conditionalPanel(
+    #     condition = "input.analyze > 0",  # Show only after the "Get AI Analysis" button is clicked
+    #     tags$div(
+    #       class = "loading-container",
+    #       tags$img(src = "www/loading.gif", class = "loading-spinner"),
+    #       tags$p("Generating analysis... Please wait.", class = "loading-text")
+    #     )
+    #   )
+    # })
+    
+    
     output$loading_ui <- renderUI({
-      if (loading()) {
-        tags$div(class = "loading-container",
-                 tags$img(src = "loading.gif", class = "loading-spinner"),
-                 tags$p("Generating analysis... Please wait.", class = "loading-text"))
+      if (loading()) {  # ✅ Show only when `loading()` is TRUE
+        tags$div(
+          class = "loading-container",
+          tags$img(src = "www/loading.gif", class = "loading-spinner"),
+          tags$p("Generating analysis... Please wait.", class = "loading-text")
+        )
       } else {
-        NULL
+        NULL  # ✅ Hide when `loading()` is FALSE
       }
     })
+    
+    
+    # output$loading_ui <- renderUI({
+    #   if (loading()) {
+    #     tags$div(class = "loading-container",
+    #              tags$img(src = "loading.gif", class = "loading-spinner"),
+    #              tags$p("Generating analysis... Please wait.", class = "loading-text"))
+    #   } else {
+    #     NULL
+    #   }
+    # })
     
     
     output$analysis <- renderText({

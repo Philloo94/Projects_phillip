@@ -27,4 +27,55 @@
 }
 
 
+/* AI Icon Styling */
+.ai-icon-container {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.ai-icon {
+  font-size: 24px;
+  color: #007bff;
+}
+
+.ai-icon:hover {
+  color: #0056b3;
+}
+
+/* Dropdown Menu */
+.ai-dropdown {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ai-icon-container:hover .ai-dropdown {
+  display: block;
+}
+
+/* Loading Spinner */
+.loading-container {
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+}
+
+.loading-text {
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+
 

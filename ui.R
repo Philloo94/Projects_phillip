@@ -4,6 +4,7 @@ source("modules/file_upload_module.R")
 source("modules/data_display_module.R")
 source("functions/read_data.R")
 source("modules/dashboard_module.R")
+source("modules/gemini_module.R")
 
 # library(shiny)
 # library(bs4Dash)
@@ -73,31 +74,16 @@ ui <- bs4DashPage(
                  )
       ),
       # ✅ Correct way to include dashboard module
-      dashboardUI("dashboard")
+      dashboardUI("dashboard"),
       
-# 📈 Dashboard Tab
-      # bs4TabItem(tabName = "dashboard",
-      #            fluidRow(
-      #              bs4ValueBoxOutput(ns("total_companies", width = 4)),
-      #              bs4ValueBoxOutput(ns("total_emissions", width = 4)),
-      #              bs4ValueBoxOutput(ns("top_emitter", width = 4))
-      #            ),
-      #            fluidRow(
-      #              bs4Card(
-      #                title = "Emissions Over Time",
-      #                status = "primary",
-      #                solidHeader = TRUE,
-      #                collapsible = TRUE,
-      #                width = 12,
-      #                plotOutput("emissions_trend")
-      #              )
-      #            )
-      # )
+### new code added for geminiui      
+      
+      # 💡 AI Insights (Gemini Module UI)
+      conditionalPanel(
+        condition = "input.ai_icon_clicked == true",  # Show only if AI icon was clicked
+        geminiUI("gemini")  # Call the Gemini UI module here
+      )
 
-# 📈 Dashboard Tab
-#       bs4TabItem(tabName = "dashboard",
-#            dashboardUI("dashboard")  # ✅ Call the module instead of manually defining UI elements
-# )
     )
   )
 )

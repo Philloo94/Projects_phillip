@@ -18,5 +18,6 @@ source("functions/read_data.R")
 source("modules/file_upload_module.R")
 source("modules/data_display_module.R")
 source("modules/dashboard_module.R")
+source("modules/gemini_module.R")
 
 shinyApp(ui = ui, server = server)
