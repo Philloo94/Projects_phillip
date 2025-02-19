@@ -186,9 +186,17 @@ dashboardServer <- function(id, data) {
       return(filtered)  # ✅ Ensure the filtered dataset is returned      
       
     })
+######### latest code added    
+    # Return filtered_data to make it accessible outside
+    return(filtered_data)   
+    
+################    
     
     # Total Companies Value Box
     output$total_companies <- renderbs4ValueBox({
+#### latest code added
+   #   req(filtered_data())  # Ensure that filtered_data() exists      
+########      
       bs4ValueBox(
 #       value = length(unique(filtered_data()$parent_entity)),  # Count unique companies
         value = tags$span(length(unique(filtered_data()$parent_entity))),  # Wrap the value in a shiny tag (span)        
@@ -200,6 +208,9 @@ dashboardServer <- function(id, data) {
     
     # Total Emissions Value Box
     output$total_emissions <- renderbs4ValueBox({
+#### latest code added
+   #   req(filtered_data())  # Ensure that filtered_data() exists      
+########           
       bs4ValueBox(
 #       value = round(sum(filtered_data()$total_emissions_MtCO2e, na.rm = TRUE), 2),  # Sum of total emissions
         value = tags$span(round(sum(filtered_data()$total_emissions_MtCO2e, na.rm = TRUE), 2)),  # Wrap the value in a shiny tag        
@@ -228,6 +239,9 @@ dashboardServer <- function(id, data) {
     
     # Top Emitter Value Box
     output$top_emitter <- renderbs4ValueBox({
+      #### latest code added
+      #req(filtered_data())  # Ensure that filtered_data() exists      
+      ########           
       # Ensure filtered data is valid
       data_to_check <- filtered_data()
       

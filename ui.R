@@ -77,13 +77,14 @@ ui <- bs4DashPage(
       #######
       # ✅ Dashboard Tab (Corrected)
       bs4TabItem(tabName = "dashboard",  # Add tabName
-                 dashboardUI("dashboard")  # Place dashboardUI inside bs4TabItem
+                 dashboardUI("dashboard"),  # Place dashboardUI inside bs4TabItem
+                 geminiUI("gemini_module")
       )
       
 
     ),
     
-    geminiUI("gemini_module")
+#   geminiUI("gemini_module")
   )
 )
 

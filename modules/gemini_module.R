@@ -38,6 +38,22 @@ geminiUI <- function(id) {
 geminiServer <- function(id, filtered_data) {
   moduleServer(id, function(input, output, session) {
     # Debugging statement to check if module runs
+    
+### lastest code added
+    # Debugging: Check if filtered_data is accessible
+    observe({
+      print("Gemini Module: Checking filtered data...")
+      print(head(filtered_data()))
+    }) 
+    
+    # Example: Use filtered_data inside gemini_module
+    output$summary_table <- renderTable({
+      req(filtered_data())  # Ensure data is available before rendering
+      filtered_data()  # Return the filtered dataset
+    })
+    
+#########
+    
     print("geminiServer module is running...")
     
     api_key <- Sys.getenv("GEMINI_API_KEY")
@@ -244,3 +260,4 @@ geminiServer <- function(id, filtered_data) {
     )
   })
 }
+

@@ -16,7 +16,11 @@ server <- function(input, output, session) {
   dataDisplayServer("display1", uploaded_data)
   
   # 📊 Call the dashboard module, passing the uploaded data to it
-  dashboardServer("dashboard", uploaded_data)
+#  dashboardServer("dashboard", uploaded_data)
+  
+##### latest code added
+  filtered_data <- dashboardServer("dashboard", uploaded_data) 
+#######  
   
   # Pass 'filtered_data()' to the geminiServer
 #  callModule(geminiServer, "gemini_module", filtered_data = filtered_data)  
